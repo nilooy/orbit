@@ -19,32 +19,60 @@ const getFontSize = ({ theme, size }) => {
   return tokens[size];
 };
 
-const getBackgroundColor = state => ({ selected, theme, removable }) => {
-  if (removable && !selected) {
-    const states = {
-      [STATES.DEFAULT]: removable ? theme.orbit.paletteBlueDarker : theme.orbit.paletteCloudDark,
-      [STATES.HOVER]: removable
-        ? theme.orbit.paletteBlueDarkerHover
+const getBackgroundColor = state => ({ selected, removable, theme }) => {
+  const states = {
+    [STATES.DEFAULT]:
+      // eslint-disable-next-line no-nested-ternary
+      removable && !selected
+        ? theme.orbit.paletteBlueNormal
+        : selected
+        ? theme.orbit.paletteBlueLight
+        : theme.orbit.paletteCloudDark,
+    [STATES.HOVER]:
+      // eslint-disable-next-line no-nested-ternary
+      removable && !selected
+        ? theme.orbit.paletteBlueNormalHover
+        : selected
+        ? theme.orbit.paletteBlueLightHover
         : theme.orbit.paletteCloudNormalHover,
-      [STATES.ACTIVE]: removable
-        ? theme.orbit.paletteBlueDarkerActive
+    [STATES.ACTIVE]:
+      // eslint-disable-next-line no-nested-ternary
+      removable && !selected
+        ? theme.orbit.paletteBlueNormalActive
+        : selected
+        ? theme.orbit.paletteBlueLightActive
         : theme.orbit.paletteCloudNormalHover,
-    };
+  };
+  return states[state];
+};
 
-    return states[state];
+const CloseContainer = styled.div`
+  display: flex;
+  margin-${left}: 8px;
+  opacity: 0.25;
+  color: ${({ theme, selected, removable }) =>
+    // eslint-disable-next-line no-nested-ternary
+    removable && !selected
+      ? theme.orbit.paletteWhite
+      : selected
+      ? theme.orbit.paletteBlueDarker
+      : theme.orbit.paletteInkLight};
+  cursor: pointer;
+  transition: color ${({ theme }) => theme.orbit.durationFast} ease-in-out;
+
+  &:hover {
+    color: ${({ theme, selected }) =>
+      selected ? theme.orbit.paletteBlueDarker : theme.orbit.paletteWhite};
   }
 
-  const states = {
-    [STATES.DEFAULT]: selected ? theme.orbit.paletteBlueLight : theme.orbit.paletteCloudDark,
-    [STATES.HOVER]: selected
-      ? theme.orbit.paletteBlueLightHover
-      : theme.orbit.paletteCloudNormalHover,
-    [STATES.ACTIVE]: selected
-      ? theme.orbit.paletteBlueLightActive
-      : theme.orbit.paletteCloudNormalHover,
-  };
+  &:active {
+    color: ${({ theme, selected }) =>
+      selected ? theme.orbit.paletteBlueDarker : theme.orbit.paletteWhite};
+  }
+`;
 
-  return states[state];
+CloseContainer.defaultProps = {
+  theme: defaultTheme,
 };
 
 export const StyledTag = styled.div`
@@ -63,11 +91,8 @@ export const StyledTag = styled.div`
   justify-content: center;
   align-items: center;
   font-size: ${getFontSize};
-  height: ${({ theme }) => theme.orbit.spaceXLarge};
   font-weight: ${({ theme }) => theme.orbit.fontWeightMedium};
   border-radius: ${({ theme }) => theme.orbit.borderRadiusNormal};
-  box-shadow: ${({ theme, selected }) =>
-    !selected && `inset 0 0 0 1px ${theme.orbit.borderColorTag}`};
   padding: ${({ theme }) => rtlSpacing(theme.orbit.paddingTag)};
   transition: color ${({ theme }) => theme.orbit.durationFast} ease-in-out,
     box-shadow ${({ theme }) => theme.orbit.durationFast} ease-in-out,
@@ -84,15 +109,24 @@ export const StyledTag = styled.div`
 
       &:hover {
         background: ${getBackgroundColor(STATES.HOVER)};
+        ${CloseContainer} {
+          opacity: 0.5;
+        }
         box-shadow: none;
       }
 
       &:active {
+        ${CloseContainer} {
+          opacity: 1;
+        }
         background: ${getBackgroundColor(STATES.ACTIVE)};
         box-shadow: none;
       }
 
       &:focus {
+        ${CloseContainer} {
+          opacity: 1;
+        }
         background: ${getBackgroundColor(STATES.HOVER)};
         box-shadow: none;
         outline: 0;
@@ -104,44 +138,6 @@ StyledTag.defaultProps = {
   theme: defaultTheme,
 };
 
-const CloseContainer = styled.div`
-  display: flex;
-  margin-${left}: 8px;
-  color: ${({ theme, selected, removable }) =>
-    // eslint-disable-next-line no-nested-ternary
-    removable && !selected
-      ? theme.orbit.paletteWhite
-      : selected
-      ? theme.orbit.paletteBlueLightHover
-      : theme.orbit.paletteInkLight};
-  cursor: pointer;
-  transition: color ${({ theme }) => theme.orbit.durationFast} ease-in-out;
-
-  &:hover {
-    color: ${({ theme, selected, removable }) =>
-      // eslint-disable-next-line no-nested-ternary
-      removable && !selected
-        ? theme.orbit.paletteWhite
-        : selected
-        ? theme.orbit.paletteBlueDarker
-        : theme.orbit.paletteInkLight};
-  }
-
-  &:active {
-    color: ${({ theme, selected, removable }) =>
-      // eslint-disable-next-line no-nested-ternary
-      removable && !selected
-        ? theme.orbit.paletteWhite
-        : selected
-        ? theme.orbit.paletteBlueDarker
-        : theme.orbit.paletteInkLight};
-  }
-`;
-
-CloseContainer.defaultProps = {
-  theme: defaultTheme,
-};
-
 const StyledClose = styled.div`
   display: flex;
   border-radius: 100%;
@@ -149,8 +145,8 @@ const StyledClose = styled.div`
   &:focus {
     outline: none;
     box-shadow: 0 0 0 2px
-      ${({ theme, selected }) =>
-        selected ? theme.orbit.paletteBlueDarker : theme.orbit.paletteWhite};
+      ${({ theme, selected, removable }) =>
+        selected && !removable ? theme.orbit.paletteBlueDarker : theme.orbit.paletteWhite};
   }
 `;
 StyledClose.defaultProps = {
@@ -168,6 +164,7 @@ const buttonClickEmulation = (ev, callback) => {
 
 const Tag = (props: Props) => {
   const { selected, children, size = SIZES.NORMAL, onClick, onRemove, dataTest } = props;
+
   return (
     <StyledTag
       actionable={onClick || onRemove}
@@ -194,8 +191,8 @@ const Tag = (props: Props) => {
         >
           <StyledClose
             tabIndex="0"
-            role="button"
             selected={selected}
+            role="button"
             onKeyDown={ev => {
               ev.stopPropagation();
               buttonClickEmulation(ev, onRemove);
