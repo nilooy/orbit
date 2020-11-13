@@ -3,11 +3,14 @@ umd
 es
 .out
 .cache
+.DS_STORE
+src/**/.DS_STORE
 src/data/airportIllustrations.json
 src/data/illustrations.json
 src/data/icons.json
 src/Illustration/index.js.flow
 src/AirportIllustration/index.js.flow
+src/SmartPassIllustration/.DS
 src/ServiceLogo/index.js.flow
 src/FeatureIcon/index.js.flow
 src/Illustration/index.d.ts
