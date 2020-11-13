@@ -16,12 +16,23 @@
     "@babel/preset-react" "^7.10.1"
     "@babel/runtime" "^7.10.1"
 
-"@adeira/js@^1.3.0":
+"@adeira/js@^1.2.4", "@adeira/js@^1.3.0":
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/@adeira/js/-/js-1.3.0.tgz#e3dbd9009570190f504b8b775ed8a77822e330bf"
   integrity sha512-cr28wwyEhmyKZK9Y72br/DcmPthuyynq8S1nkXMbTiv3MsDuT+y18onsNc+wIqJBxwVN60Yv2JEGzT3m+zLK0A==
   dependencies:
     "@babel/runtime" "^7.12.1"
+
+"@adeira/monorepo-utils@^0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@adeira/monorepo-utils/-/monorepo-utils-0.9.0.tgz#56d985f6b00b8d87a3319310b8695f8b7c24509d"
+  integrity sha512-IbEVcEdKIpDo1dFKe13JwDNVhLZqDO34t8T5NvJr5Meqq1ha91byiZcI5h8CqGN3yqU+XiCqDqdX8XlJ1ITq5w==
+  dependencies:
+    "@adeira/js" "^1.2.4"
+    "@babel/register" "^7.11.5"
+    "@babel/runtime" "^7.11.2"
+    glob "^7.1.6"
+    is-ci "^2.0.0"
 
 "@babel/cli@^7.12.1":
   version "7.12.1"
@@ -1874,7 +1885,7 @@
     "@babel/helper-plugin-utils" "^7.10.4"
     "@babel/plugin-transform-typescript" "^7.10.4"
 
-"@babel/register@^7.0.0":
+"@babel/register@^7.0.0", "@babel/register@^7.11.5":
   version "7.12.1"
   resolved "https://registry.yarnpkg.com/@babel/register/-/register-7.12.1.tgz#cdb087bdfc4f7241c03231f22e15d211acf21438"
   integrity sha512-XWcmseMIncOjoydKZnWvWi0/5CUCD+ZYKhRwgYlWOrA8fGZ/FjuLRpqtIhLOVD/fvR1b9DQHtZPn68VvhpYf+Q==
@@ -9530,7 +9541,7 @@ eyes@0.1.x:
   dependencies:
     kind-of "^5.0.2"
 
-fancy-log@^1.3.2:
+fancy-log@^1.3.2, fancy-log@^1.3.3:
   version "1.3.3"
   resolved "https://registry.yarnpkg.com/fancy-log/-/fancy-log-1.3.3.tgz#dbc19154f558690150a23953a0adbd035be45fc7"
   integrity sha512-k9oEhlyc0FrVh25qYuSELjr8oxsCoc4/LEZfg2iJJrfEk/tZL9bCoJE47gqAvI2m/AUjluCS4+3I0eTx8n3AEw==

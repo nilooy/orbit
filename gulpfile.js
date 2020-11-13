@@ -9,6 +9,8 @@ const mergeStream = require("merge-stream");
 const transform = require("through2").obj;
 const path = require("path");
 
+const eslintCI = require("./tasks/eslintCI");
+
 async function previewChangelog(done) {
   const packages = await getPackages();
   const streams = packages.map(pkg => {
@@ -54,5 +56,6 @@ function publishPackages() {
 }
 
 module.exports = {
+  eslintCI,
   publish: series(previewChangelog, publishPackages),
 };
